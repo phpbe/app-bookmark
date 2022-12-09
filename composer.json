@@ -1,0 +1,27 @@
+{
+  "name": "be/app-bookmark",
+  "type": "library",
+  "description": "书签（网址管理）",
+  "keywords": [
+    "Bookmark",
+    "书签",
+    "网址管理"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "1024i team",
+      "email": "1024i@1024i.com",
+      "homepage": "https://www.1024i.com/team"
+    }
+  ],
+  "require": {
+    "be/be": "~2.6",
+    "geoip2/geoip2": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Be\\App\\Bookmark\\": "src/"
+    }
+  }
+}
