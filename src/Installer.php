@@ -18,14 +18,14 @@ class Installer extends \Be\App\Installer
         $db = Be::getDb();
         $tableNames = $db->getTableNames();
         if (in_array('bookmark_category', $tableNames)) {
-            if (in_array('bookmark_user_token', $tableNames)) {
+            if (in_array('bookmark_url', $tableNames)) {
                 return;
             } else {
                 throw new RuntimeException('剑测到部分数据表已存在，请检查数据库！');
             }
         }
 
-        $sql = file_get_contents(__DIR__ . '/Installer.sql');
+        $sql = file_get_contents(__DIR__ . '/exe/install/install.sql');
         $sqls = preg_split('/; *[\r\n]+/', $sql);
         foreach ($sqls as $sql) {
             $sql = trim($sql);
