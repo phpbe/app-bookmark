@@ -21,8 +21,17 @@ class Url
         $groups = $db->getObjects($sql, [$categoryId]);
 
         foreach ($groups as $group) {
+            $group->is_enable = (int)$group->is_enable;
+            $group->ordering = (int)$group->ordering;
+
             $sql = 'SELECT * FROM bookmark_url WHERE group_id =? AND is_delete=0 ORDER BY ordering ASC';
-            $group->urls = $db->getObjects($sql, [$group->id]);
+            $urls = $db->getObjects($sql, [$group->id]);
+            foreach ($urls as $url) {
+                $url->is_enable = (int)$url->is_enable;
+                $url->ordering = (int)$url->ordering;
+                $url->has_account = (int)$url->has_account;
+            }
+            $group->urls = $urls;
         }
 
         return $groups;

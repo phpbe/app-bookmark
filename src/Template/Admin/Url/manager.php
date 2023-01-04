@@ -1,5 +1,11 @@
 <be-head>
     <?php
+    $appSystemWwwUrl = \Be\Be::getProperty('App.System')->getWwwUrl();
+    ?>
+    <script src="<?php echo $appSystemWwwUrl; ?>/lib/sortable/sortable.min.js"></script>
+    <script src="<?php echo $appSystemWwwUrl; ?>/lib/vuedraggable/vuedraggable.umd.min.js"></script>
+
+    <?php
     $wwwUrl = \Be\Be::getProperty('App.Bookmark')->getWwwUrl();
     ?>
     <link rel="stylesheet" href="<?php echo $wwwUrl; ?>/admin/css/url/manager.css">
@@ -36,111 +42,140 @@
         <div id="left-resize" :style="{left: leftWidth + 'px'}"></div>
 
         <div class="right-side" :style="{marginLeft: (leftWidth + 10) + 'px'}">
-            <el-form ref="formRef" :model="formData">
-                <div class="be-row">
+            <el-form ref="formRef" :model="formData" style="height: 100%;">
+                <div class="be-row" style="height: 100%;">
+                    <div class="be-col-10" style="height: 100%; overflow-y: auto;">
+                        <draggable
+                                v-model="formData"
+                                handle=".group-drag-icon"
+                                force-fallback="true"
+                                animation="100"
 
-                </div>
-
-                <draggable v-model="formData" force-fallback="true" animation="100" filter=".image-uploader" handle=".image-move">
-                    <transition-group>
-                        <div v-for="group in formData" :key="group.ordering" class="group be-b-eee">
-                            <div class="be-p-50 be-bc-eee">
-                                <div class="be-row">
-                                    <div class="be-col-auto be-lh-250">组名：</div>
-                                    <div class="be-col">
-                                        <el-input
-                                                type="text"
-                                                placeholder="组名"
-                                                v-model = "group.name"
-                                                size="medium"
-                                                maxlength="200">
-                                        </el-input>
+                                ghost-class="group-ghost"
+                                chosen-class="group-chosen"
+                                drag-class="group-drag"
+                        >
+                            <transition-group>
+                                <div v-for="group in formData" :key="group.id" :class="{'group': true, 'group-on': currentGroup && currentGroup.id===group.id}" @click="toggleGroup(group)">
+                                    <div class="be-row">
+                                        <div class="be-col-auto group-drag-icon">
+                                            <i class="el-icon-rank"></i>
+                                        </div>
+                                        <div class="be-col-auto be-lh-250">组名：</div>
+                                        <div class="be-col">
+                                            <el-input
+                                                    type="text"
+                                                    placeholder="组名"
+                                                    v-model = "group.name"
+                                                    size="medium"
+                                                    maxlength="200">
+                                            </el-input>
+                                        </div>
+                                        <div class="be-col-auto be-lh-250"><div class="be-pl-100">启用：</div></div>
+                                        <div class="be-col-auto be-lh-250">
+                                            <el-switch v-model.number="group.is_enable" :active-value="1" :inactive-value="0" size="medium"></el-switch>
+                                        </div>
+                                        <div class="be-col-auto be-lh-250">
+                                            <div class="be-pl-100">
+                                                <el-link type="danger" icon="el-icon-delete" @click="deleteGroup(group)"></el-link>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            </transition-group>
+                        </draggable>
 
-                            <div class="be-row">
-                                <div class="be-col-12" v-for="url in group.urls">
-                                    <div class="be-p-100">
-                                        <div class="be-row">
-                                            <div class="be-col-auto be-lh-250">名称：</div>
-                                            <div class="be-col">
-                                                <el-input
-                                                        type="text"
-                                                        placeholder="组名"
-                                                        v-model = "url.name"
-                                                        size="medium"
-                                                        maxlength="200">
-                                                </el-input>
-                                            </div>
-                                        </div>
-
-                                        <div class="be-row be-mt-50">
-                                            <div class="be-col-auto be-lh-250">网址：</div>
-                                            <div class="be-col">
-                                                <el-input
-                                                        type="text"
-                                                        placeholder="组名"
-                                                        v-model = "url.url"
-                                                        size="medium"
-                                                        maxlength="200">
-                                                </el-input>
-                                            </div>
-                                            <div class="be-col-auto be-lh-250">账号：</div>
-                                            <div class="be-col-auto be-lh-250"></div>
-                                        </div>
-
-                                        <div class="be-row be-mt-50">
-                                            <div class="be-col-auto be-lh-250">启用：</div>
-                                            <div class="be-col-auto be-lh-250">
-                                                <el-switch v-model.number="url.is_enable" :active-value="1" :inactive-value="0" size="medium"></el-switch>
-                                            </div>
-                                            <div class="be-col-auto be-lh-250"><div class="be-pl-100">账号：</div></div>
-                                            <div class="be-col-auto be-lh-250">
-                                                <el-switch v-model.number="url.has_account" :active-value="1" :inactive-value="0" size="medium"></el-switch>
-                                            </div>
-                                            <div class="be-col">
-                                                <div class="be-pl-100">
-                                                    <el-input
-                                                            type="text"
-                                                            placeholder="用户名"
-                                                            v-model = "url.username"
-                                                            size="medium"
-                                                            maxlength="200">
-                                                    </el-input>
-                                                </div>
-                                            </div>
-                                            <div class="be-col">
-                                                <div class="be-pl-100">
-                                                    <el-input
-                                                            type="text"
-                                                            placeholder="密码"
-                                                            v-model = "url.password"
-                                                            size="medium"
-                                                            maxlength="200">
-                                                    </el-input>
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="be-p-100">
-                                <el-button size="small" type="warning" icon="el-icon-plus" @click="addUrl(group)">新增网址</el-button>
-                            </div>
-
+                        <div class="be-mt-100">
+                            <el-button size="medium" type="success" icon="el-icon-plus" @click="addGroup">新增分组</el-button>
+                            <el-button size="medium" type="primary" icon="el-icon-save" @click="save">保存</el-button>
                         </div>
+                    </div>
+                    <div class="be-col-14" style="height: 100%; overflow-y: auto;">
+                        <div class="be-pl-100" v-if="currentGroup !== false">
 
-                    </transition-group>
-                </draggable>
+                            <draggable v-model="currentGroup.urls" handle=".group-url-drag-icon" force-fallback="true" animation="100">
+                                <transition-group>
 
-                <div class="be-mt-100">
-                    <el-button size="medium" type="success" icon="el-icon-plus" @click="addGroup">新增分组</el-button>
-                    <el-button size="medium" type="primary" icon="el-icon-save" @click="save">保存</el-button>
+                                    <div v-for="url in currentGroup.urls" :key="url.id" class="group-url">
+                                        <div class="be-row">
+                                            <div class="be-col-auto group-url-drag-icon">
+                                                <i class="el-icon-rank"></i>
+                                            </div>
+                                            <div class="be-col">
+
+                                                <div class="be-row">
+                                                    <div class="be-col-auto be-lh-250">名称：</div>
+                                                    <div class="be-col">
+                                                        <el-input
+                                                                type="text"
+                                                                placeholder="组名"
+                                                                v-model = "url.name"
+                                                                size="medium"
+                                                                maxlength="200">
+                                                        </el-input>
+                                                    </div>
+                                                    <div class="be-col-auto be-lh-250"><div class="be-pl-100">网址：</div></div>
+                                                    <div class="be-col">
+                                                        <el-input
+                                                                type="text"
+                                                                placeholder="组名"
+                                                                v-model = "url.url"
+                                                                size="medium"
+                                                                maxlength="200">
+                                                        </el-input>
+                                                    </div>
+                                                </div>
+
+                                                <div class="be-row be-mt-50">
+                                                    <div class="be-col-auto be-lh-250">启用：</div>
+                                                    <div class="be-col-auto be-lh-250">
+                                                        <el-switch v-model.number="url.is_enable" :active-value="1" :inactive-value="0" size="medium"></el-switch>
+                                                    </div>
+                                                    <div class="be-col-auto be-lh-250"><div class="be-pl-100">账号：</div></div>
+                                                    <div class="be-col-auto be-lh-250">
+                                                        <el-switch v-model.number="url.has_account" :active-value="1" :inactive-value="0" size="medium"></el-switch>
+                                                    </div>
+                                                    <div class="be-col" v-if="url.has_account === 1">
+                                                        <div class="be-pl-100">
+                                                            <el-input
+                                                                    type="text"
+                                                                    placeholder="用户名"
+                                                                    v-model = "url.username"
+                                                                    size="medium"
+                                                                    maxlength="200">
+                                                            </el-input>
+                                                        </div>
+                                                    </div>
+                                                    <div class="be-col" v-if="url.has_account === 1">
+                                                        <div class="be-pl-100">
+                                                            <el-input
+                                                                    type="text"
+                                                                    placeholder="密码"
+                                                                    v-model = "url.password"
+                                                                    size="medium"
+                                                                    maxlength="200">
+                                                            </el-input>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="be-col-auto">
+                                                <div class="be-pl-100 be-lh-250">
+                                                    <el-link type="danger" icon="el-icon-delete" @click="deleteUrl(url)"></el-link>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </transition-group>
+                            </draggable>
+
+                            <el-button size="small" type="warning" icon="el-icon-plus" @click="addUrl()">新增网址</el-button>
+                        </div>
+                    </div>
                 </div>
+
             </el-form>
         </div>
     </div>
@@ -151,8 +186,13 @@
     ?>
 
     <script>
+        Vue.component('vuedraggable', window.vuedraggable);
+
         let vueCenter = new Vue({
             el: '#app',
+            components: {
+                vuedraggable: window.vuedraggable,//当前页面注册组件
+            },
             data: {
                 leftWidth: 200,
                 leftWidthLoaded: false,
@@ -166,6 +206,8 @@
 
                 formData: [],
 
+                currentGroup: false,
+
                 loading: false,
 
                 t: false
@@ -175,6 +217,8 @@
             },
             methods: {
                 edit(categoryId) {
+                    this.currentGroup = false;
+
                     let _this = this;
                     _this.loading = true;
                     _this.$http.post("<?php echo beAdminUrl('Bookmark.Url.getGroupUrls'); ?>", {
@@ -184,7 +228,17 @@
                         if (response.status === 200) {
                             var responseData = response.data;
                             if (responseData.success) {
-                                _this.formData = responseData.groupUrls;
+
+                                let groupUrls = [];
+                                for(let groupUrl of responseData.groupUrls) {
+                                    groupUrl.toggle = 1;
+                                    groupUrls.push(groupUrl);
+                                }
+                                _this.formData = groupUrls;
+
+                                if (_this.formData.length >0) {
+                                    _this.currentGroup = _this.formData[0];
+                                }
                             } else {
                                 if (responseData.message) {
                                     _this.$message.error(responseData.message);
@@ -198,10 +252,53 @@
                         _this.$message.error(error);
                     });
                 },
-                addUrl(group) {
-                    group.urls.push({
-                        id: "",
-                        group_id: group.id,
+                save() {
+                    let _this = this;
+                    _this.loading = true;
+                    _this.$http.post("<?php echo beAdminUrl('Bookmark.Url.edit'); ?>", {
+                        formData: _this.formData
+                    }).then(function (response) {
+                        _this.loading = false;
+                        if (response.status === 200) {
+                            var responseData = response.data;
+                            if (responseData.success) {
+                                _this.$message.success(responseData.message);
+                            } else {
+                                if (responseData.message) {
+                                    _this.$message.error(responseData.message);
+                                } else {
+                                    _this.$message.error("服务器返回数据异常！");
+                                }
+                            }
+                        }
+                    }).catch(function (error) {
+                        _this.loading = false;
+                        _this.$message.error(error);
+                    });
+                },
+                toggleGroup(group) {
+                    this.currentGroup = group;
+                },
+                addGroup() {
+                    this.formData.push({
+                        id: "-" + (this.formData.length + 1),
+                        name: "",
+                        is_enable: 1,
+                        urls: [],
+                    });
+
+                    this.currentGroup = this.formData[this.formData.length - 1];
+                },
+                deleteGroup(group) {
+                    if (group.id === this.currentGroup.id) {
+                        this.currentGroup = false;
+                    }
+                    this.formData.splice(this.formData.indexOf(group), 1);
+                },
+                addUrl() {
+                    this.currentGroup.urls.push({
+                        id: "-" + (this.currentGroup.urls.length + 1),
+                        group_id: this.currentGroup.id,
                         name: "",
                         url: "",
                         has_account: 0,
@@ -210,11 +307,8 @@
                         is_enable: 1,
                     });
                 },
-                addGroup() {
-
-                },
-                save() {
-
+                deleteUrl(url) {
+                    this.currentGroup.urls.splice(this.currentGroup.urls.indexOf(url), 1);
                 },
                 resizeLeft() {
                     let cookieKey = 'doc-chapter-left-width';

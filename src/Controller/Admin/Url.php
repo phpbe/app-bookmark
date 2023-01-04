@@ -55,32 +55,9 @@ class Url extends Auth
     }
 
     /**
-     * 添加文档
+     * 保存
      *
-     * @BePermission("项目文档管理")
-     */
-    public function create()
-    {
-        $request = Be::getRequest();
-        $response = Be::getResponse();
-
-        try {
-            $chapter = Be::getService('App.Doc.Admin.Chapter')->create($request->json());
-            $response->set('success', true);
-            $response->set('message', '新建文档成功！');
-            $response->set('chapter', $chapter);
-            $response->json();
-        } catch (\Throwable $t) {
-            $response->set('success', false);
-            $response->set('message', $t->getMessage());
-            $response->json();
-        }
-    }
-
-    /**
-     * 保存文档
-     *
-     * @BePermission("项目文档管理")
+     * @BePermission("保存网址")
      */
     public function edit()
     {
@@ -88,53 +65,9 @@ class Url extends Auth
         $response = Be::getResponse();
 
         try {
-            Be::getService('App.Doc.Admin.Chapter')->edit($request->json('formData'));
+            Be::getService('App.Bookmark.Admin.Url')->edit($request->json('formData'));
             $response->set('success', true);
-            $response->set('message', '保存文档成功！');
-            $response->json();
-        } catch (\Throwable $t) {
-            $response->set('success', false);
-            $response->set('message', $t->getMessage());
-            $response->json();
-        }
-    }
-
-    /**
-     * 文档排序
-     *
-     * @BePermission("项目文档管理")
-     */
-    public function sort()
-    {
-        $request = Be::getRequest();
-        $response = Be::getResponse();
-
-        try {
-            Be::getService('App.Doc.Admin.Chapter')->sort($request->json('formData'));
-            $response->set('success', true);
-            $response->set('message', '文档排序成功！');
-            $response->json();
-        } catch (\Throwable $t) {
-            $response->set('success', false);
-            $response->set('message', $t->getMessage());
-            $response->json();
-        }
-    }
-
-    /**
-     * 删除文档
-     *
-     * @BePermission("项目文档管理")
-     */
-    public function delete()
-    {
-        $request = Be::getRequest();
-        $response = Be::getResponse();
-        try {
-            $chapterId = $request->json('chapter_id', '');
-            Be::getService('App.Doc.Admin.Chapter')->delete($chapterId);
-            $response->set('success', true);
-            $response->set('message', '删除文档成功！');
+            $response->set('message', '保存成功！');
             $response->json();
         } catch (\Throwable $t) {
             $response->set('success', false);
