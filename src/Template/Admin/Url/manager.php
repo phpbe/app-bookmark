@@ -2,7 +2,7 @@
     <?php
     $wwwUrl = \Be\Be::getProperty('App.Bookmark')->getWwwUrl();
     ?>
-    <link rel="stylesheet" href="<?php echo $wwwUrl; ?>/admin/css/chapter/chapters.css">
+    <link rel="stylesheet" href="<?php echo $wwwUrl; ?>/admin/css/url/manager.css">
 </be-head>
 
 
@@ -13,19 +13,21 @@
     $uiItems = new \Be\AdminPlugin\UiItem\UiItems();
     $rootUrl = \Be\Be::getRequest()->getRootUrl();
     ?>
-    <div class="be-bc-fff be-px-100 be-pt-100 be-pb-50" id="app" v-cloak>
+    <div class="be-bc-fff be-px-100 be-pt-100 be-pb-50 be-p-relative" style="height: calc(100vh - 120px);" id="app" v-cloak>
         <div class="left-side" :style="{width: leftWidth + 'px'}">
             <div class="left-side-tree">
                 <el-tree
                         ref="categoryTree"
                         :data="categoryTree"
                         node-key="id"
-                        @node-click="(data) => editChapter(data.id)"
+                        @node-click="(data) => edit(data.id)"
                         :expand-on-click-node="false"
+                        :props="categoryTreeProps"
                         highlight-current
-                        draggable>
+                        default-expand-all
+                        >
                 <span class="custom-tree-node" slot-scope="{ node, data }">
-                    <span>{{ node.name }}</span>
+                    <span>{{node.label}}</span>
                   </span>
                 </el-tree>
             </div>
@@ -37,6 +39,107 @@
             <el-form ref="formRef" :model="formData">
                 <div class="be-row">
 
+                </div>
+
+                <draggable v-model="formData" force-fallback="true" animation="100" filter=".image-uploader" handle=".image-move">
+                    <transition-group>
+                        <div v-for="group in formData" :key="group.ordering" class="group be-b-eee">
+                            <div class="be-p-50 be-bc-eee">
+                                <div class="be-row">
+                                    <div class="be-col-auto be-lh-250">组名：</div>
+                                    <div class="be-col">
+                                        <el-input
+                                                type="text"
+                                                placeholder="组名"
+                                                v-model = "group.name"
+                                                size="medium"
+                                                maxlength="200">
+                                        </el-input>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="be-row">
+                                <div class="be-col-12" v-for="url in group.urls">
+                                    <div class="be-p-100">
+                                        <div class="be-row">
+                                            <div class="be-col-auto be-lh-250">名称：</div>
+                                            <div class="be-col">
+                                                <el-input
+                                                        type="text"
+                                                        placeholder="组名"
+                                                        v-model = "url.name"
+                                                        size="medium"
+                                                        maxlength="200">
+                                                </el-input>
+                                            </div>
+                                        </div>
+
+                                        <div class="be-row be-mt-50">
+                                            <div class="be-col-auto be-lh-250">网址：</div>
+                                            <div class="be-col">
+                                                <el-input
+                                                        type="text"
+                                                        placeholder="组名"
+                                                        v-model = "url.url"
+                                                        size="medium"
+                                                        maxlength="200">
+                                                </el-input>
+                                            </div>
+                                            <div class="be-col-auto be-lh-250">账号：</div>
+                                            <div class="be-col-auto be-lh-250"></div>
+                                        </div>
+
+                                        <div class="be-row be-mt-50">
+                                            <div class="be-col-auto be-lh-250">启用：</div>
+                                            <div class="be-col-auto be-lh-250">
+                                                <el-switch v-model.number="url.is_enable" :active-value="1" :inactive-value="0" size="medium"></el-switch>
+                                            </div>
+                                            <div class="be-col-auto be-lh-250"><div class="be-pl-100">账号：</div></div>
+                                            <div class="be-col-auto be-lh-250">
+                                                <el-switch v-model.number="url.has_account" :active-value="1" :inactive-value="0" size="medium"></el-switch>
+                                            </div>
+                                            <div class="be-col">
+                                                <div class="be-pl-100">
+                                                    <el-input
+                                                            type="text"
+                                                            placeholder="用户名"
+                                                            v-model = "url.username"
+                                                            size="medium"
+                                                            maxlength="200">
+                                                    </el-input>
+                                                </div>
+                                            </div>
+                                            <div class="be-col">
+                                                <div class="be-pl-100">
+                                                    <el-input
+                                                            type="text"
+                                                            placeholder="密码"
+                                                            v-model = "url.password"
+                                                            size="medium"
+                                                            maxlength="200">
+                                                    </el-input>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="be-p-100">
+                                <el-button size="small" type="warning" icon="el-icon-plus" @click="addUrl(group)">新增网址</el-button>
+                            </div>
+
+                        </div>
+
+                    </transition-group>
+                </draggable>
+
+                <div class="be-mt-100">
+                    <el-button size="medium" type="success" icon="el-icon-plus" @click="addGroup">新增分组</el-button>
+                    <el-button size="medium" type="primary" icon="el-icon-save" @click="save">保存</el-button>
                 </div>
             </el-form>
         </div>
@@ -53,11 +156,15 @@
             data: {
                 leftWidth: 200,
                 leftWidthLoaded: false,
+
                 categoryTreeCurrentNodeKey: "",
-
                 categoryTree: <?php echo json_encode($this->categoryTree); ?>,
+                categoryTreeProps: {
+                    children: 'children',
+                    label: 'name'
+                },
 
-                formData: null,
+                formData: [],
 
                 loading: false,
 
@@ -67,7 +174,46 @@
                 ?>
             },
             methods: {
-                editChapter(id) {
+                edit(categoryId) {
+                    let _this = this;
+                    _this.loading = true;
+                    _this.$http.post("<?php echo beAdminUrl('Bookmark.Url.getGroupUrls'); ?>", {
+                        category_id: categoryId
+                    }).then(function (response) {
+                        _this.loading = false;
+                        if (response.status === 200) {
+                            var responseData = response.data;
+                            if (responseData.success) {
+                                _this.formData = responseData.groupUrls;
+                            } else {
+                                if (responseData.message) {
+                                    _this.$message.error(responseData.message);
+                                } else {
+                                    _this.$message.error("服务器返回数据异常！");
+                                }
+                            }
+                        }
+                    }).catch(function (error) {
+                        _this.loading = false;
+                        _this.$message.error(error);
+                    });
+                },
+                addUrl(group) {
+                    group.urls.push({
+                        id: "",
+                        group_id: group.id,
+                        name: "",
+                        url: "",
+                        has_account: 0,
+                        username: "",
+                        password: "",
+                        is_enable: 1,
+                    });
+                },
+                addGroup() {
+
+                },
+                save() {
 
                 },
                 resizeLeft() {
@@ -113,27 +259,19 @@
                         return false;
                     };
                 },
-                initFormData: function () {
-                    this.formData = {
-                        id: "",
-                        parent_id: "",
-                        title: "",
-                        is_enable: 0,
-                    };
-                },
 
                 autoLoad() {
                     if (this.categoryTree.length > 0) {
 
-                        let chapterId = this.categoryTree[0].id;
+                        let categoryId = this.categoryTree[0].id;
 
-                        this.editChapter(chapterId);
+                        this.edit(categoryId);
 
                         let _this = this;
 
                         // 选中新添加的文档
                         _this.$nextTick(function (){
-                            _this.$refs.categoryTree.setCurrentKey(chapterId);
+                            _this.$refs.categoryTree.setCurrentKey(categoryId);
                         });
                     }
                 }
@@ -142,10 +280,6 @@
                 ?>
             }
             <?php
-            $uiItems->setVueHook('created', '
-                this.initFormData();
-            ');
-
             $uiItems->setVueHook('mounted', 'this.resizeLeft();');
 
             echo $uiItems->getVueHooks();

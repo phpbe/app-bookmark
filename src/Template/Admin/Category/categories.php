@@ -8,7 +8,7 @@
     <?php
     $appBookmarkWwwUrl = \Be\Be::getProperty('App.Bookmark')->getWwwUrl();
     ?>
-    <link rel="stylesheet" href="<?php echo $appBookmarkWwwUrl; ?>/admin/category/css/categories.css" type="text/css"/>
+    <link rel="stylesheet" href="<?php echo $appBookmarkWwwUrl; ?>/admin/css/category/categories.css" type="text/css"/>
 </be-head>
 
 

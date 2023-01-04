@@ -35,17 +35,17 @@ class Url extends Auth
      *
      * @BePermission("项目文档管理")
      */
-    public function getUrls()
+    public function getGroupUrls()
     {
         $request = Be::getRequest();
         $response = Be::getResponse();
 
         try {
-            $chapterId = $request->json('chapter_id', '');
-            $chapter = Be::getService('App.Doc.Admin.Chapter')->getChapter($chapterId);
+            $categoryId = $request->json('category_id', '');
+            $groupUrls = Be::getService('App.Bookmark.Admin.Url')->getGroupUrls($categoryId);
             $response->set('success', true);
             $response->set('message', '获取文档成功！');
-            $response->set('chapter', $chapter);
+            $response->set('groupUrls', $groupUrls);
             $response->json();
         } catch (\Throwable $t) {
             $response->set('success', false);
