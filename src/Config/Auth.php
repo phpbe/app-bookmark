@@ -2,9 +2,9 @@
 namespace Be\App\Bookmark\Config;
 
 /**
- * @BeConfig("书签")
+ * @BeConfig("身份验证")
  */
-class Bookmark
+class Auth
 {
 
     /**
@@ -13,7 +13,7 @@ class Bookmark
      *     driver="FormItemInput"
      * )
      */
-    public string $password = '';
+    public string $password = '123456';
 
 
 }
