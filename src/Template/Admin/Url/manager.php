@@ -204,6 +204,7 @@
                     label: 'name'
                 },
 
+                categoryId: false,
                 formData: [],
 
                 currentGroup: false,
@@ -228,6 +229,7 @@
                         if (response.status === 200) {
                             var responseData = response.data;
                             if (responseData.success) {
+                                _this.categoryId = categoryId;
 
                                 let groupUrls = [];
                                 for(let groupUrl of responseData.groupUrls) {
@@ -256,6 +258,7 @@
                     let _this = this;
                     _this.loading = true;
                     _this.$http.post("<?php echo beAdminUrl('Bookmark.Url.edit'); ?>", {
+                        category_id: _this.categoryId,
                         formData: _this.formData
                     }).then(function (response) {
                         _this.loading = false;
@@ -263,6 +266,7 @@
                             var responseData = response.data;
                             if (responseData.success) {
                                 _this.$message.success(responseData.message);
+                                _this.edit(_this.categoryId);
                             } else {
                                 if (responseData.message) {
                                     _this.$message.error(responseData.message);

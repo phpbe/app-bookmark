@@ -65,7 +65,8 @@ class Url extends Auth
         $response = Be::getResponse();
 
         try {
-            Be::getService('App.Bookmark.Admin.Url')->edit($request->json('formData'));
+            $categoryId = $request->json('category_id', '');
+            Be::getService('App.Bookmark.Admin.Url')->edit($categoryId, $request->json('formData'));
             $response->set('success', true);
             $response->set('message', '保存成功！');
             $response->json();

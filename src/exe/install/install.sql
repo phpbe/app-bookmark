@@ -1,7 +1,10 @@
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
 CREATE TABLE `bookmark_category` (
-  `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
-  `parent_id` varchar(36) NOT NULL DEFAULT '' COMMENT '父ID',
-  `name` varchar(300) NOT NULL DEFAULT '' COMMENT '名称',
+  `id` varchar(36) COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
+  `parent_id` varchar(36) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '父ID',
+  `name` varchar(300) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '名称',
   `ordering` int(11) NOT NULL DEFAULT '0' COMMENT '排序',
   `is_enable` tinyint(4) NOT NULL DEFAULT '1' COMMENT '是否启用',
   `is_delete` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否已删除',
@@ -10,9 +13,9 @@ CREATE TABLE `bookmark_category` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='分类';
 
 CREATE TABLE `bookmark_group` (
-  `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
-  `category_id` varchar(36) NOT NULL DEFAULT '' COMMENT '分类ID',
-  `name` varchar(300) NOT NULL DEFAULT '' COMMENT '名称',
+  `id` varchar(36) COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
+  `category_id` varchar(36) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '分类ID',
+  `name` varchar(300) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '名称',
   `ordering` int(11) NOT NULL DEFAULT '0' COMMENT '排序',
   `is_enable` tinyint(4) NOT NULL DEFAULT '1' COMMENT '是否启用',
   `is_delete` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否已删除',
@@ -21,12 +24,13 @@ CREATE TABLE `bookmark_group` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='分组';
 
 CREATE TABLE `bookmark_url` (
-  `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
-  `group_id` varchar(36) NOT NULL DEFAULT '' COMMENT '分组ID',
-  `name` varchar(300) NOT NULL DEFAULT '' COMMENT '名称',
-  `url` varchar(300) NOT NULL DEFAULT '' COMMENT '网址',
-  `username` varchar(60) NOT NULL DEFAULT '' COMMENT '账号',
-  `password` varchar(60) NOT NULL DEFAULT '' COMMENT '密码',
+  `id` varchar(36) COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
+  `group_id` varchar(36) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '分组ID',
+  `name` varchar(300) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '名称',
+  `url` varchar(300) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '网址',
+  `has_account` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否有账号',
+  `username` varchar(60) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '账号',
+  `password` varchar(60) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '密码',
   `ordering` int(11) NOT NULL DEFAULT '0' COMMENT '排序',
   `is_enable` tinyint(4) NOT NULL DEFAULT '1' COMMENT '是否启用',
   `is_delete` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否已删除',
