@@ -117,7 +117,7 @@ class Template extends Section
             echo '">';
 
             if ($group->name !== '') {
-                echo '<h4 class="be-h4">' . $group->name . '</h4>';
+                echo '<div class="be-fs-110 be-fw-bold">' . $group->name . '</div>';
             }
 
             echo '<div class="be-mt-25">';
