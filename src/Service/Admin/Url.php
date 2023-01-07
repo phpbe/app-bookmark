@@ -31,14 +31,20 @@ class Url
             }
 
             if (count($keepGroupIds) > 0) {
-                Be::getTable('bookmark_group')
+                $deleteGroupIds = Be::getTable('bookmark_group')
                     ->where('category_id', $categoryId)
                     ->where('id', 'NOT IN', $keepGroupIds)
-                    ->delete();
+                    ->getValues('id');
 
-                Be::getTable('bookmark_url')
-                    ->where('group_id', 'NOT IN', $keepGroupIds)
-                    ->delete();
+                if (count($deleteGroupIds) > 0) {
+                    Be::getTable('bookmark_url')
+                        ->where('group_id', 'IN', $deleteGroupIds)
+                        ->delete();
+
+                    Be::getTable('bookmark_group')
+                        ->where('id', 'IN', $deleteGroupIds)
+                        ->delete();
+                }
             } else {
                 $deleteGroupIds = Be::getTable('bookmark_group')
                     ->where('category_id', $categoryId)
