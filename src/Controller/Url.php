@@ -4,7 +4,7 @@ namespace Be\App\Bookmark\Controller;
 
 use Be\Be;
 
-class Url extends Auth
+class Url
 {
 
     /**

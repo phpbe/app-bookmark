@@ -15,17 +15,17 @@ class Url
     public function getCategories(): array
     {
         $db = Be::getDb();
-        $sql = 'SELECT * FROM bookmark_category WHERE is_delete=0 AND is_enable=0 ORDER BY ordering ASC';
+        $sql = 'SELECT * FROM bookmark_category WHERE is_delete=0 AND is_enable=1 ORDER BY ordering ASC';
         $categories = Be::getDb()->getObjects($sql);
         foreach ($categories as $category) {
-            $sql = 'SELECT * FROM bookmark_group WHERE category_id=? AND is_delete=0 AND is_enable=0 ORDER BY ordering ASC';
+            $sql = 'SELECT * FROM bookmark_group WHERE category_id=? AND is_delete=0 AND is_enable=1 ORDER BY ordering ASC';
             $groups = $db->getObjects($sql, [$category->id]);
             foreach ($groups as $group) {
                 $group->ordering = (int)$group->ordering;
                 $group->is_enable = (int)$group->is_enable;
                 $group->is_delete = (int)$group->is_delete;
 
-                $sql = 'SELECT * FROM bookmark_url WHERE group_id =? AND is_delete=0 AND is_enable=0 ORDER BY ordering ASC';
+                $sql = 'SELECT * FROM bookmark_url WHERE group_id =? AND is_delete=0 AND is_enable=1 ORDER BY ordering ASC';
                 $urls = $db->getObjects($sql, [$group->id]);
                 foreach ($urls as $url) {
                     $url->ordering = (int)$url->ordering;

@@ -22,6 +22,12 @@ class Template extends Section
         $serviceUrl = Be::getService('App.Bookmark.Url');
         $urlTree = $serviceUrl->getTree();
 
+
+        echo '<div class="url-tree">';
+        if ($this->position === 'middle' && $this->config->width === 'default') {
+            echo '<div class="be-container">';
+        }
+
         echo '<div class="be-tab">';
         echo '<div class="be-tab-nav">';
         $i = 0;
@@ -30,11 +36,11 @@ class Template extends Section
             if ($i === 0) {
                 echo ' class="be-tab-nav-active"';
             }
-            echo 'data-be-target="#be-tab-pane-'.$category->id.'">'.$category->name.'</a>';
+            echo ' data-be-target="#be-tab-pane-'.$category->id.'">'.$category->name.'</a>';
             $i++;
         }
         echo '</div>';
-        echo '<div class="be-tab-content be-pt-200">';
+        echo '<div class="be-tab-content be-py-100">';
         foreach ($urlTree as $category) {
             echo '<div class="be-tab-pane" id="be-tab-pane-'.$category->id.'">';
             $this->urls($category->groups);
@@ -47,11 +53,11 @@ class Template extends Section
                     if ($j === 0) {
                         echo ' class="be-tab-nav-active"';
                     }
-                    echo 'data-be-target="#be-tab-pane-'.$subCategory->id.'">'.$subCategory->name.'</a>';
+                    echo ' data-be-target="#be-tab-pane-'.$subCategory->id.'">'.$subCategory->name.'</a>';
                     $j++;
                 }
                 echo '</div>';
-                echo '<div class="be-tab-content be-pt-200">';
+                echo '<div class="be-tab-content be-py-100">';
                 foreach ($category->children as $subCategory) {
                     echo '<div class="be-tab-pane" id="be-tab-pane-'.$subCategory->id.'">';
                     $this->urls($subCategory->groups);
@@ -64,12 +70,12 @@ class Template extends Section
                             if ($k === 0) {
                                 echo ' class="be-tab-nav-active"';
                             }
-                            echo 'data-be-target="#be-tab-pane-'.$subSubCategory->id.'">'.$subSubCategory->name.'</a>';
+                            echo ' data-be-target="#be-tab-pane-'.$subSubCategory->id.'">'.$subSubCategory->name.'</a>';
 
                             $k++;
                         }
                         echo '</div>';
-                        echo '<div class="be-tab-content be-pt-200">';
+                        echo '<div class="be-tab-content be-py-100">';
                         foreach ($subCategory->children as $subSubCategory) {
                             echo '<div class="be-tab-pane" id="be-tab-pane-'.$subSubCategory->id.'">';
                             $this->urls($subSubCategory->groups);
@@ -88,6 +94,11 @@ class Template extends Section
         echo '</div>';
         echo '</div>';
 
+        if ($this->position === 'middle' && $this->config->width === 'default') {
+            echo '</div>';
+        }
+        echo '</div>';
+
         $this->js();
     }
 
@@ -101,7 +112,7 @@ class Template extends Section
             if ($group->name !== '') {
                 echo '<h4 class="be-h4">' . $group->name . '</h4>';
             }
-
+            echo '<div class="be-mb-50">';
             foreach ($group->urls as $url) {
                 if ($url->name !== '') {
                     echo $url->name . '：';
@@ -117,21 +128,27 @@ class Template extends Section
 
                 echo '&nbsp;&nbsp;&nbsp;';
             }
+            echo '</div>';
 
-            echo '<br>';
         }
     }
 
     private function css() {
-        echo '.be-tab {';
+
+        echo '<style type="text/css">';
+        echo $this->getCssPadding('url-tree');
+        echo $this->getCssMargin('url-tree');
+        echo $this->getCssBackgroundColor('url-tree');
+
+        echo '#' . $this->id . ' .be-tab {';
         echo '}';
 
-        echo '.be-tab-nav {';
+        echo '#' . $this->id . ' .be-tab-nav {';
         echo 'display: flex;';
         echo 'border-bottom: #666 1px solid;';
         echo '}';
 
-        echo '.be-tab-nav a {';
+        echo '#' . $this->id . ' .be-tab-nav a {';
         echo 'display: block;';
         echo 'border: 1px solid transparent;';
         echo 'padding: .5rem 1rem;';
@@ -142,28 +159,29 @@ class Template extends Section
         echo 'font-weight: bold;';
         echo '}';
 
-        echo '.be-tab-nav a:before {';
+        echo '#' . $this->id . ' .be-tab-nav a:before {';
         echo 'background-color: transparent;';
         echo '}';
 
-        echo '.be-tab-nav a:hover {';
+        echo '#' . $this->id . ' .be-tab-nav a:hover {';
         echo 'text-decoration: none;';
         echo '}';
 
-        echo '.be-tab-nav-active {';
+        echo '#' . $this->id . ' .be-tab-nav-active {';
         echo 'border-color: #666 !important;';
         echo 'border-bottom-color: #fff !important;';
         echo 'border-top-left-radius: .25rem;';
         echo 'border-top-right-radius: .25rem;';
         echo '}';
 
-        echo '.be-tab-pane {';
+        echo '#' . $this->id . ' .be-tab-pane {';
         echo 'display: none;';
         echo '}';
 
-        echo '.be-tab-pane-active {';
+        echo '#' . $this->id . ' .be-tab-pane-active {';
         echo 'display: block;';
         echo '}';
+        echo '</style>';
     }
 
 
