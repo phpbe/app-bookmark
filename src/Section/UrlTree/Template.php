@@ -104,23 +104,17 @@ class Template extends Section
 
     public function urls($groups)
     {
-        $i = 0;
         foreach ($groups as $group) {
             if (count($group->urls) === 0) {
                 continue;
             }
 
-            echo '<div class="';
-            if ($i > 0) {
-                echo ' be-mt-100';
-            }
-            echo '">';
+            echo '<div class="be-mb-100">';
 
             if ($group->name !== '') {
-                echo '<div class="be-fw-bold">' . $group->name . '</div>';
+                echo '<div class="be-fw-bold be-mb-25">' . $group->name . '</div>';
             }
 
-            echo '<div class="be-mt-25">';
             foreach ($group->urls as $url) {
                 if ($url->name !== '') {
                     echo $url->name . '：';
@@ -137,8 +131,6 @@ class Template extends Section
                 echo '&nbsp;&nbsp;&nbsp;';
             }
             echo '</div>';
-            echo '</div>';
-            $i++;
         }
     }
 

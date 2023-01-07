@@ -68,7 +68,7 @@
                                                     placeholder="组名"
                                                     v-model = "group.name"
                                                     size="medium"
-                                                    maxlength="200">
+                                                    maxlength="300">
                                             </el-input>
                                         </div>
                                         <div class="be-col-auto be-lh-250"><div class="be-pl-100">启用：</div></div>
@@ -108,20 +108,20 @@
                                                     <div class="be-col">
                                                         <el-input
                                                                 type="text"
-                                                                placeholder="组名"
+                                                                placeholder="名称"
                                                                 v-model = "url.name"
                                                                 size="medium"
-                                                                maxlength="200">
+                                                                maxlength="300">
                                                         </el-input>
                                                     </div>
                                                     <div class="be-col-auto be-lh-250"><div class="be-pl-100">网址：</div></div>
                                                     <div class="be-col">
                                                         <el-input
                                                                 type="text"
-                                                                placeholder="组名"
+                                                                placeholder="网址"
                                                                 v-model = "url.url"
                                                                 size="medium"
-                                                                maxlength="200">
+                                                                maxlength="300">
                                                         </el-input>
                                                     </div>
                                                 </div>
@@ -142,7 +142,7 @@
                                                                     placeholder="用户名"
                                                                     v-model = "url.username"
                                                                     size="medium"
-                                                                    maxlength="200">
+                                                                    maxlength="60">
                                                             </el-input>
                                                         </div>
                                                     </div>
@@ -153,7 +153,7 @@
                                                                     placeholder="密码"
                                                                     v-model = "url.password"
                                                                     size="medium"
-                                                                    maxlength="200">
+                                                                    maxlength="60">
                                                             </el-input>
                                                         </div>
                                                     </div>
