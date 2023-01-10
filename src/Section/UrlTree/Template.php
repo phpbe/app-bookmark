@@ -114,21 +114,25 @@ class Template extends Section
                 echo '<div class="be-fw-bold be-mb-25">' . $group->name . '</div>';
             }
 
+            echo '<div>';
             foreach ($group->urls as $url) {
+                echo '<div class="be-d-inline-block be-pr-200">';
                 if ($url->name !== '') {
                     echo $url->name . '：';
                 }
 
                 if ($url->url !== '') {
-                    echo '<a href="' . $url->url . '" target="_blank">' . $url->url . '</a>&nbsp;';
+                    echo '<a href="' . $url->url . '" target="_blank">' . $url->url . '</a>';
                 }
 
                 if ($url->has_account === 1) {
-                    echo $url->username . '/' . $url->password;
+                    echo '<span class="be-pl-100 be-pr-25">' . $url->username . '</span>/<span class="be-pl-25">' . $url->password . '</span>';
                 }
 
-                echo '&nbsp;&nbsp;&nbsp;';
+                echo '</div>';
             }
+            echo '</div>';
+
             echo '</div>';
         }
     }
