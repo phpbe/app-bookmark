@@ -126,7 +126,7 @@ class Template extends Section
                 }
 
                 if ($url->has_account === 1) {
-                    echo '<span class="be-pl-100 be-pr-25">' . $url->username . '</span>/<span class="be-pl-25">' . $url->password . '</span>';
+                    echo '<span class="be-pl-100">账号：</span><span class="be-pr-25">' . $url->username . '</span>/<span class="be-pl-25">' . $url->password . '</span>';
                 }
 
                 echo '</div>';
