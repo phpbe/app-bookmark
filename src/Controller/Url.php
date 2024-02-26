@@ -22,15 +22,17 @@ class Url
         $config = Be::getConfig('App.Bookmark.Auth');
 
         // 校验权限
-        if (md5('Bookmark:Password:' . $config->password) !== $password) {
-            $redirect = [
-                'url' => beUrl('Bookmark.Auth.login'),
-                'message' => '{timeout} 秒后跳转到 <a href="{url}">登录页</a>',
-                'timeout' => 3,
-            ];
+        if ($config->password !== '') {
+            if (md5('Bookmark:Password:' . $config->password) !== $password) {
+                $redirect = [
+                    'url' => beUrl('Bookmark.Auth.login'),
+                    'message' => '{timeout} 秒后跳转到 <a href="{url}">登录页</a>',
+                    'timeout' => 3,
+                ];
 
-            $response->error('请先登录！', $redirect);
-            return;
+                $response->error('请先登录！', $redirect);
+                return;
+            }
         }
 
         $response->set('title', '网址列表');
